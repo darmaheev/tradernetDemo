@@ -45,8 +45,8 @@ final class QuotesTableViewCell: UITableViewCell {
         setupUI()
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }
 
@@ -65,12 +65,14 @@ private extension QuotesTableViewCell {
         
         changeLabel.layer.masksToBounds = true
         changeLabel.layer.cornerRadius = .close
+        
+        stockImage.isHidden = true
     }
     
     func updateUI() {
         switch appearance {
         case .normal:
-            changeLabel.backgroundColor = UIColor.Main.background
+            changeLabel.backgroundColor = .clear
             changeLabel.textColor = getChangeLabelColor(quotesInfo?.procentChange)
         case .positive:
             changeLabel.backgroundColor = UIColor.Main.positive
@@ -114,7 +116,9 @@ extension QuotesTableViewCell {
                 switch result {
                 case .success(let value):
                     if value.image.size.width <= 1 {
-                        self.stockImage.image = UIImage(named: "stockPlaceholder")
+                        self.stockImage.isHidden = true
+                    } else {
+                        self.stockImage.isHidden = false
                     }
                 case .failure( _):
                     self.stockImage.image = UIImage(named: "stockPlaceholder")

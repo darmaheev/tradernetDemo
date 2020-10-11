@@ -1,10 +1,3 @@
-//
-//  TradernetUITests.swift
-//  TradernetUITests
-//
-//  Created by Валера Дармахеев on 09.10.2020.
-//
-
 import XCTest
 
 class TradernetUITests: XCTestCase {

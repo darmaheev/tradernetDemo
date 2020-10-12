@@ -63,15 +63,17 @@ extension QuotesInfo {
         procentChange = newQuotes.procentChange ?? procentChange
         exchangeName = newQuotes.exchangeName ?? exchangeName
         stockName = newQuotes.stockName ?? stockName
-        lastOrderPrice = newQuotes.lastOrderPrice ?? lastOrderPrice
         change = newQuotes.change ?? change
         if let lastOrderPrice = lastOrderPrice, let newLastOrderPrice = newQuotes.lastOrderPrice {
-            changedType = newLastOrderPrice > lastOrderPrice ? .positive : .negative
+            changedType = (newLastOrderPrice > lastOrderPrice)
+                ? .positive
+                : (newLastOrderPrice < lastOrderPrice) ? .negative : .none
             needUpdate = true
         } else {
             changedType = .none
-            needUpdate = false
+            needUpdate = lastOrderPrice != newQuotes.lastOrderPrice
         }
+        lastOrderPrice = newQuotes.lastOrderPrice ?? lastOrderPrice
         updateTime = Date()
     }
     

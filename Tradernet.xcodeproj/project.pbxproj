@@ -11,6 +11,7 @@
 		2A06A78F2531D0E100CE9B43 /* TickersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A06A78E2531D0E100CE9B43 /* TickersRequest.swift */; };
 		2A06A7932531D0EF00CE9B43 /* TickersResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A06A7922531D0EF00CE9B43 /* TickersResponse.swift */; };
 		2A06A798253295F800CE9B43 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2A06A797253295F800CE9B43 /* Localizable.strings */; };
+		2A5055E82533E3E800187463 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5055E72533E3E800187463 /* SocketIO */; };
 		2ADD828E2530056F005E9E60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD828D2530056F005E9E60 /* AppDelegate.swift */; };
 		2ADD82902530056F005E9E60 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD828F2530056F005E9E60 /* SceneDelegate.swift */; };
 		2ADD82952530056F005E9E60 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2ADD82932530056F005E9E60 /* Main.storyboard */; };
@@ -21,7 +22,6 @@
 		2ADD82C12530067B005E9E60 /* QuotesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD82C02530067B005E9E60 /* QuotesListViewController.swift */; };
 		2ADD82C625300B08005E9E60 /* QuotesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD82C525300B08005E9E60 /* QuotesTableViewCell.swift */; };
 		2ADD82CB25300EDA005E9E60 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD82CA25300EDA005E9E60 /* Services.swift */; };
-		2ADD82D12530119C005E9E60 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADD82D02530119C005E9E60 /* SocketIO */; };
 		2ADD82D625302512005E9E60 /* QuotesInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD82D525302512005E9E60 /* QuotesInfoResponse.swift */; };
 		2ADD830225306620005E9E60 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD830125306620005E9E60 /* NetworkManager.swift */; };
 		2ADD830D253068B6005E9E60 /* QuotesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD830C253068B6005E9E60 /* QuotesManager.swift */; };
@@ -97,8 +97,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2AE9042A2530A7390008EC2A /* Kingfisher in Frameworks */,
-				2ADD82D12530119C005E9E60 /* SocketIO in Frameworks */,
 				2A06A78B2531C30200CE9B43 /* PMKAlamofire in Frameworks */,
+				2A5055E82533E3E800187463 /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,9 +281,9 @@
 			);
 			name = Tradernet;
 			packageProductDependencies = (
-				2ADD82D02530119C005E9E60 /* SocketIO */,
 				2AE904292530A7390008EC2A /* Kingfisher */,
 				2A06A78A2531C30200CE9B43 /* PMKAlamofire */,
+				2A5055E72533E3E800187463 /* SocketIO */,
 			);
 			productName = Tradernet;
 			productReference = 2ADD828A2530056F005E9E60 /* Tradernet.app */;
@@ -357,9 +357,9 @@
 			);
 			mainGroup = 2ADD82812530056F005E9E60;
 			packageReferences = (
-				2ADD82CF2530119C005E9E60 /* XCRemoteSwiftPackageReference "socket" */,
 				2AE904282530A7390008EC2A /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				2A06A7892531C30200CE9B43 /* XCRemoteSwiftPackageReference "PMKAlamofire" */,
+				2A5055E62533E3E700187463 /* XCRemoteSwiftPackageReference "socket" */,
 			);
 			productRefGroup = 2ADD828B2530056F005E9E60 /* Products */;
 			projectDirPath = "";
@@ -761,12 +761,12 @@
 				minimumVersion = 3.2.4;
 			};
 		};
-		2ADD82CF2530119C005E9E60 /* XCRemoteSwiftPackageReference "socket" */ = {
+		2A5055E62533E3E700187463 /* XCRemoteSwiftPackageReference "socket" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			repositoryURL = "https://github.com/jorgefrazaocosta/socket.io-client-swift";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 15.2.0;
+				branch = feature/9.0.1/Swift5;
+				kind = branch;
 			};
 		};
 		2AE904282530A7390008EC2A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
@@ -785,9 +785,9 @@
 			package = 2A06A7892531C30200CE9B43 /* XCRemoteSwiftPackageReference "PMKAlamofire" */;
 			productName = PMKAlamofire;
 		};
-		2ADD82D02530119C005E9E60 /* SocketIO */ = {
+		2A5055E72533E3E800187463 /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2ADD82CF2530119C005E9E60 /* XCRemoteSwiftPackageReference "socket" */;
+			package = 2A5055E62533E3E700187463 /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 		2AE904292530A7390008EC2A /* Kingfisher */ = {

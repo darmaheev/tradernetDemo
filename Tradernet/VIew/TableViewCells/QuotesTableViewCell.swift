@@ -29,8 +29,6 @@ final class QuotesTableViewCell: UITableViewCell {
         }
     }
     
-    private var quotesInfo: QuotesInfo?
-    
     // MARK: - Init
     
     override func awakeFromNib() {
@@ -73,7 +71,7 @@ private extension QuotesTableViewCell {
         switch appearance {
         case .normal:
             changeLabel.backgroundColor = .clear
-            changeLabel.textColor = getChangeLabelColor(quotesInfo?.procentChange)
+            changeLabel.textColor = getChangeLabelColor()
         case .positive:
             changeLabel.backgroundColor = UIColor.Main.positive
             changeLabel.textColor = UIColor.Main.background
@@ -83,8 +81,8 @@ private extension QuotesTableViewCell {
         }
     }
     
-    func getChangeLabelColor(_ change: Double?) -> UIColor {
-        guard let change = change, change != 0 else {
+    func getChangeLabelColor() -> UIColor {
+        guard let change = Double(changeLabel.text ?? .empty), change != 0 else {
             return UIColor.Main.text
         }
         if change > 0 {
@@ -99,11 +97,10 @@ private extension QuotesTableViewCell {
 
 extension QuotesTableViewCell {
     func configure(with model: QuotesInfo) {
-        quotesInfo = model
         tickerLabel.text = model.ticker
-        tickerInfoLabel.text = "\(model.exchangeName ?? .empty) | \(model.stockName ?? .empty)"
-        changeLabel.text = (model.procentChange ?? 0).print("%.2f")
-        changeInfoLabel.text = "\(model.lastOrderPrice?.minStepFormat(model.minStep) ?? .empty) (\(model.change?.minStepFormat(model.minStep) ?? .empty))"
+        tickerInfoLabel.text = "\(model.exchangeName ?? Constants.placeholder) | \(model.stockName ?? Constants.placeholder)"
+        changeLabel.text = model.procentChange != nil ? model.procentChange!.print("%.2f") : Constants.placeholder
+        changeInfoLabel.text = "\(model.lastOrderPrice?.minStepFormat(model.minStep) ?? Constants.placeholder) (\(model.change?.minStepFormat(model.minStep) ?? Constants.placeholder))"
         
         stockImage?.kf.setImage(
             with: Services.quotes.getTickerImageUrl(for: model.ticker),
@@ -127,7 +124,7 @@ extension QuotesTableViewCell {
             }
         )
         
-        appearance = Appearance(isPositive: model.isPositive)
+        appearance = Appearance(model)
     }
     
     func setAppearance(_ appearance: Appearance) {
@@ -147,12 +144,19 @@ extension QuotesTableViewCell {
         case negative
         case normal
         
-        init(isPositive: Bool?) {
-            guard let isPositive = isPositive else {
+        init(_ model: QuotesInfo) {
+            guard let updateTime = model.updateTime, Date().timeIntervalSince(updateTime) < QuotesListViewController.Constants.highlitedTime else {
                 self = .normal
                 return
             }
-            self = isPositive ? .positive : .negative
+            switch model.changedType {
+            case .positive:
+                self = .positive
+            case .negative:
+                self = .negative
+            case .none:
+                self = .normal
+            }
         }
     }
 }
@@ -165,5 +169,6 @@ private extension QuotesTableViewCell {
         static let horizontalPadding: CGFloat = .middle
         static let verticalPadding: CGFloat = .half
         static let spacing: CGFloat = .close
+        static let placeholder: String = "-"
     }
 }

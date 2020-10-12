@@ -6,12 +6,23 @@ final class QuotesListViewController: UITableViewController {
     // MARK: - Variables
     
     private var timer: Timer?
-    private var quotes: [QuotesInfo] = [] {
-        didSet {
-            update()
+    private var quotes: [QuotesInfo] = []
+    
+    private lazy var updateTable:() -> Void = self.debounce(delay: Constants.updateDelay) { [weak self] in
+        guard let self = self else {
+            return
         }
+        
+        var updateInds: [IndexPath] = []
+        for i in self.quotes.indices where self.quotes[i].needUpdate {
+            updateInds.append(IndexPath(row: i, section: 0))
+            self.quotes[i].updated()
+        }
+        
+        self.tableView.beginUpdates()
+        self.tableView.reloadRows(at: updateInds, with: .none)
+        self.tableView.endUpdates()
     }
-    private lazy var update:() -> Void = self.debounce(delay: Constants.updateDelay) { [weak self] in self?.tableView.reloadData() }
     
     // MARK: Life cycle
     
@@ -42,7 +53,9 @@ private extension QuotesListViewController {
     func fetchQuotes() {
         firstly {
             Services.quotes.getTopTickers(Constants.countQuotes)
-        }.done { tickers in
+        }.done { [weak self] tickers in
+            self?.quotes = tickers.map({QuotesInfo(ticker: $0)})
+            self?.tableView.reloadData()
             Services.quotes.connect(with: tickers)
         }.catch { _ in
             print("Failed to get top securities")
@@ -79,6 +92,7 @@ extension QuotesListViewController: QuotesListener {
                 self.quotes.append($0)
             }
         }
+        updateTable()
     }
     
     
@@ -115,9 +129,9 @@ private extension QuotesListViewController {
         
         for indexPath in visibleRowsIndexPaths {
             if let cell = tableView.cellForRow(at: indexPath) as? QuotesTableViewCell,
-               let lastUpdateTime = quotes[indexPath.row].updateTime,
                cell.appearanceIsHighlighted == true,
-               Int(currentTime.timeIntervalSince(lastUpdateTime)) > Constants.highlitedTime {
+               let lastUpdateTime = quotes[indexPath.row].updateTime,
+               currentTime.timeIntervalSince(lastUpdateTime) > Constants.highlitedTime {
                 cell.setAppearance(.normal)
             }
         }
@@ -131,10 +145,10 @@ extension QuotesListViewController: Debounceable { }
 
 // MARK: - Constants
 
-private extension QuotesListViewController {
+extension QuotesListViewController {
     struct Constants {
         static let countQuotes: Int = 30
-        static let highlitedTime: Int = 1
+        static let highlitedTime: TimeInterval = 1.5
         static let updateDelay: TimeInterval = 0.3
         static let timerInterval: TimeInterval = 1.0
         static let timerTolerance: TimeInterval = 0.1

@@ -21,12 +21,10 @@ class NetworkManager {
     private let baseUrl = "https://tradernet.ru/api/"
     private let socketBaseUrl = "https://ws2.tradernet.ru/"
     
-    let manager: SocketManager
     let socket: SocketIOClient
     
     init() {
-        manager = SocketManager(socketURL: URL(string: socketBaseUrl)!, config: [.compress])
-        socket = manager.defaultSocket
+        socket = SocketIOClient(socketURL: URL(string: socketBaseUrl)!, config: [.forcePolling(true)])
     }
     
 }

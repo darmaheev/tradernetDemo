@@ -21,8 +21,9 @@ struct QuotesInfo: Codable, Hashable {
     var lastOrderPrice: Double?
     var change: Double?
     var minStep: Double?
-    var isPositive: Bool?
+    var changedType: ChangedType = .none
     var updateTime: Date?
+    var needUpdate: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case ticker = "c"
@@ -32,6 +33,16 @@ struct QuotesInfo: Codable, Hashable {
         case lastOrderPrice = "ltp"
         case change = "chg"
         case minStep = "min_step"
+    }
+    
+    enum ChangedType {
+        case positive
+        case negative
+        case none
+    }
+    
+    init(ticker: String) {
+        self.ticker = ticker
     }
     
 }
@@ -55,10 +66,16 @@ extension QuotesInfo {
         lastOrderPrice = newQuotes.lastOrderPrice ?? lastOrderPrice
         change = newQuotes.change ?? change
         if let lastOrderPrice = lastOrderPrice, let newLastOrderPrice = newQuotes.lastOrderPrice {
-            isPositive = newLastOrderPrice > lastOrderPrice
+            changedType = newLastOrderPrice > lastOrderPrice ? .positive : .negative
+            needUpdate = true
         } else {
-            isPositive = nil
+            changedType = .none
+            needUpdate = false
         }
         updateTime = Date()
+    }
+    
+    mutating func updated() {
+        needUpdate = false
     }
 }
